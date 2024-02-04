@@ -56,7 +56,7 @@ model CommunityMember {
 
 model Message {
   id                String           @id @default(uuid())
-  body              String
+  content           String
   sender            User             @relation("MessageSent", fields: [senderId], references: [id])
   senderId          String
   CommunityMember   CommunityMember? @relation(fields: [communityMemberId], references: [id])

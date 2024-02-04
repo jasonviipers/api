@@ -2,7 +2,7 @@ import { object, string, ref } from "yup";
 
 export const loginSchema = object({
     identifier: string().required('Email or username is required.'),
-    password: string().min(8, 'Password must be 8 or more characters long'),
+    password: string().min(8, 'Password must be 8 or more characters long').required('Password is required'),
 });
 
 export const passwordLessLoginSchema = object({

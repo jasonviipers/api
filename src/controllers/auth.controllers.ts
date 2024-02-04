@@ -60,7 +60,7 @@ export default class AuthController {
             }
 
             // Hash the password
-            const hashService = new HashServices(validateData.password!);
+            const hashService = new HashServices(validateData.password);
             const hashedPassword = await hashService.hash();
 
             // Generate token for email verification
@@ -117,7 +117,7 @@ export default class AuthController {
             }
 
             // Check the password
-            const hashService = new HashServices(validateData.password!);
+            const hashService = new HashServices(validateData.password);
             if (!hashService.compare(user.password)) {
                 return this.response
                     .status(HttpStatusCodes.UNAUTHORIZED)
@@ -308,7 +308,7 @@ export default class AuthController {
             }
 
             // Hash the password
-            const hashService = new HashServices(validateData.password!);
+            const hashService = new HashServices(validateData.password);
             const hashedPassword = await hashService.hash();
 
             // Update user password

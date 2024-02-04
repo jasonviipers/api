@@ -42,7 +42,7 @@ export default class JwtUtils {
     }
 
     static verify(token: string): JwtPayload {
-        const secretKey = process.env.JWT_SECRET_KEY || '';
+        const secretKey = process.env.JWT_SECRET_KEY;
 
         if (!secretKey) {
             LoggerUtils.error('JWT_SECRET_KEY is not defined'); // Log error message

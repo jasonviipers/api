@@ -103,7 +103,7 @@ export default [
     {
         method: 'get',
         path: '/users',
-        middleware: [AuthMiddleware.authenticate, AuthMiddleware.authorize(['ADMIN'])],
+        middleware: [AuthMiddleware.authenticate, AuthMiddleware.authorize(['USER'])],
         controller: (req: Request, res: Response, next: NextFunction) => {
             return new UserController(req, res, next).getAllUsers();
         },

@@ -41,7 +41,12 @@ export default class UserController {
 
     async getAllUsers() {
         try {
-            const users = await this.userService.getAllUsers();
+            const filterString = this.request.query.filter as string;
+            const limit = parseInt(this.request.query.limit as string) || undefined;
+
+            const filter = filterString ? JSON.parse(filterString) : undefined;
+
+            const users = await this.userService.getAllUsers(filter, limit);
             return this.response.status(HttpStatusCodes.OK).json(users);
         } catch (error) {
             return this.handleErrors('fetching all users', error as Error);

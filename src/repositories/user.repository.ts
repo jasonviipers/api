@@ -14,8 +14,11 @@ export default class UserRepository {
         });
     }
 
-    async getAllUsers() {
-        return await this.prisma.user.findMany();
+    async getAllUsers(filter?:Prisma.UserWhereInput, limit?:number) {
+        return await this.prisma.user.findMany({
+            where: filter,
+            take: limit
+        });
     }
 
     async getUser(where: Partial<Prisma.UserWhereUniqueInput>, select?: Prisma.UserSelect) {

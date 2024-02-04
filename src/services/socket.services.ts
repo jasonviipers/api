@@ -1,5 +1,6 @@
 import { Server as httpServer } from 'http';
 import { Server as SocketIoServer, Socket } from 'socket.io';
+import { createAdapter } from '@socket.io/redis-adapter';
 import { LoggerUtils } from '../utils/logger.utils';
 import 'dotenv/config';
 

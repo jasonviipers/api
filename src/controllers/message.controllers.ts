@@ -100,7 +100,7 @@ export default class MessageController {
 
             // Create the message without specifying a community
             const message = await this.messageRepo.createMessage({
-                body: validatedInput.body,
+                content: validatedInput.content,
                 sender: {
                     connect: { id: validatedInput.senderId },
                 },

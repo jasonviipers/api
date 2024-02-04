@@ -6,6 +6,7 @@ tags:
   - postgresql
   - prisma
   - typescript
+  - redis
 ---
 
 # ExpressJS Prisma
@@ -31,12 +32,6 @@ This is an [ExpressJS](https://expressjs.com/) REST API that uses [Prisma](https
 ## 📝 Notes
 
 This is a REST API for chat . The available routes are
-
-<!-- - `GET /todos` gets all todos
-- `POST /todos` creates a new using `text` in the JSON body
-- `GET /todos/:id` gets a todo by id
-- `PUT /todos/:id` updates a todo by id
-- `DELETE /todos/:id` deletes a todo by id -->
 
 - `POST /auth/register` creates a new user using `email or username` and `password` in the JSON body
 - `POST /auth/login` logs in a user using `email or username` and `password` in the JSON body

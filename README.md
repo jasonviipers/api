@@ -6,6 +6,7 @@ tags:
   - postgresql
   - prisma
   - typescript
+  - redis
 ---
 
 # ExpressJS Prisma

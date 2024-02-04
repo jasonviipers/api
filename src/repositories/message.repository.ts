@@ -14,8 +14,14 @@ export default class MessageRepository {
         });
     }
 
-    async getAllMessages() {
-        return await this.prisma.message.findMany();
+    async getAllMessages(filter?: Prisma.MessageWhereInput,limit?: number, select?: Prisma.MessageSelect) {
+        return await this.prisma.message.findMany(
+            {
+                where: filter,
+                take: limit,
+                select,
+            }
+        );
     }
 
     async getMessage(where: Partial<Prisma.MessageWhereUniqueInput>, select?: Prisma.MessageSelect) {

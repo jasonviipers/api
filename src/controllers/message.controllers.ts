@@ -159,7 +159,11 @@ export default class MessageController {
 
     async getAllMessages() {
         try {
-            const messages = await this.messageRepo.getAllMessages();
+            const filter = this.request.query.filter as string;
+            const limit = parseInt(this.request.query.limit as string) || undefined;
+            const filterObject = filter ? JSON.parse(filter) : undefined;
+
+            const messages = await this.messageRepo.getAllMessages(filterObject, limit);
             return this.response.status(HttpStatusCodes.OK).json(messages);
         } catch (error) {
             return this.handleErrors('getAllMessages', error as Error);

@@ -21,15 +21,31 @@ export default class EncryptMessageController {
         });
     }
 
+    /**
+     * Encrypts the provided message using AES-256-CBC algorithm.
+     * @param {string} message - The message to be encrypted.
+     * @returns {Object} An object containing encrypted data, key, and IV.
+     */
     async encryptMessage() {
         try {
             const { message } = this.request.body;
-            if (!message) return this.response.status(HttpStatusCodes.BAD_REQUEST).json({ message: 'The request body must include a "message" property.' });
+            if (!message) {
+                return this.response.status(HttpStatusCodes.BAD_REQUEST).json({
+                    message: 'The request body must include a "message" property.',
+                });
+            }
+
+            // Generate a random key and IV
             const key = crypto.randomBytes(32);
             const iv = crypto.randomBytes(16);
+
+            // Create a cipher using AES-256-CBC algorithm
             const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
+
+            // Encrypt the message
             let encrypted = cipher.update(message, 'utf8', 'hex');
             encrypted += cipher.final('hex');
+
             return this.response.status(HttpStatusCodes.OK).json({
                 data: {
                     encrypted,
@@ -42,13 +58,28 @@ export default class EncryptMessageController {
         }
     }
 
+    /**
+     * Decrypts the provided encrypted data using AES-256-CBC algorithm.
+     * @param {Object} encryptedData - The encrypted data along with key and IV.
+     * @returns {string} The decrypted message.
+     */
     async decryptMessage() {
         try {
             const { message, key, iv } = this.request.body;
-            if (!message || !key || !iv) return this.response.status(HttpStatusCodes.BAD_REQUEST).json({ message: 'The request body must include "message", "key", and "iv" properties.' });
+            if (!message || !key || !iv) {
+                return this.response.status(HttpStatusCodes.BAD_REQUEST).json({
+                    message: 'The request body must include "message", "key", and "iv" properties.',
+                });
+            }
+
+            // Convert key and IV from hex to Buffer
             const keyBuffer = Buffer.from(key, 'hex');
             const ivBuffer = Buffer.from(iv, 'hex');
+
+            // Create a decipher using AES-256-CBC algorithm
             const decipher = crypto.createDecipheriv('aes-256-cbc', keyBuffer, ivBuffer);
+
+            // Decrypt the message
             let decrypted = decipher.update(message, 'hex', 'utf8');
             decrypted += decipher.final('utf8');
 
@@ -57,10 +88,8 @@ export default class EncryptMessageController {
                     decrypted,
                 },
             });
-
         } catch (error) {
             return this.handleErrors('decrypting message', error as Error);
         }
     }
-
 }

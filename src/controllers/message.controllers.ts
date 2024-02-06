@@ -6,6 +6,7 @@ import { LoggerUtils } from '../utils/logger.utils';
 import { createMessageSchema, getMessagesBySenderIdSchema } from '../schema/message.schema';
 import { Message, MessageStatus } from '@prisma/client';
 import { client } from '../utils/redis.utils';
+import Encryptor from '../utils/encryptor.utils';
 
 export default class MessageController {
     protected request: Request;
@@ -13,6 +14,7 @@ export default class MessageController {
     protected next: NextFunction;
     protected messageRepo: MessageRepository;
     protected userRepo: UserRepository;
+    protected encryptor: Encryptor;
 
     constructor(request: Request, response: Response, next: NextFunction) {
         this.request = request;
@@ -20,6 +22,10 @@ export default class MessageController {
         this.next = next;
         this.messageRepo = new MessageRepository();
         this.userRepo = new UserRepository();
+        this.encryptor = new Encryptor(
+            process.env.ENCRYPTION_KEY as string,
+            process.env.ENCRYPTION_IV as string
+        ); // Initialize your encryption utility
     }
 
     private async handleErrors(methodName: string, error: Error): Promise<Response> {
@@ -98,9 +104,12 @@ export default class MessageController {
                 });
             }
 
+            // Encrypt the message content
+            const encryptedContent = this.encryptor.encrypt(validatedInput.content);
+
             // Create the message without specifying a community
             const message = await this.messageRepo.createMessage({
-                content: validatedInput.content,
+                content: encryptedContent,
                 sender: {
                     connect: { id: validatedInput.senderId },
                 },
@@ -138,6 +147,11 @@ export default class MessageController {
                 sender: {
                     id: params.senderId,
                 },
+            });
+
+            // Decrypt and update message status
+            messages.forEach(message => {
+                message.content = this.encryptor.decrypt(message.content);
             });
 
             // Update message status and cache the messages
